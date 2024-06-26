@@ -1,12 +1,25 @@
+// import { useState } from "react";
 import Day from "./Day";
 
-const Week = () =>{
+const Week = ({week, days, toggleSelected}) => {
+//   const [ days, setDays ] = useState(initial);
+//   console.log(days);
 
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    return(
-        <div className="week-block">
-        <span className="week-num">num</span>
-        {days.map((day, i) => <Day key={i} name = {day}/>)}</div>
-    )
-}
+  const onToggleSelected = (dayId) => {
+    toggleSelected(week, dayId);
+  };
+
+  return (
+    <div className="week-block">
+      <span className="week-num">{week}</span>
+      {days.map((day) => (
+        <Day
+          key={day + day.name}
+          toggleSelected={onToggleSelected}
+          day={day}
+        />
+      ))}
+    </div>
+  );
+};
 export default Week;

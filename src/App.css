@@ -12,12 +12,15 @@ h3{
 .week-block {
   display: flex;
   align-items: center;
+  margin-block-end: 1rem;
 }
 .week-num{
   margin-inline-end: 2rem;
 }
 
 .day-block {
+  display: flex;
+  flex-direction: column;
   width: 3rem;
   padding: .5rem;
   border: 1px solid grey;
@@ -29,4 +32,9 @@ h3{
 
 .day-block:hover{
   cursor: pointer;
+}
+
+.selected{
+  background-color: green;
+  color: white;
 }
