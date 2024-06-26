@@ -1,12 +1,14 @@
-
+import Week from "./components/Week";
 import './App.css'
 
 const App = () => {
+  
 
 
   return (
     <>
-     <h1>Welcome</h1>
+     <h3>My availability for the next 7 weeks</h3>
+     <Week/>
     </>
   )
 }
