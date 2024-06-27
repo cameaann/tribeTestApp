@@ -1,35 +1,30 @@
-import Week from "./components/Week";
-import { getWeeksArray } from "./service/getWeeksArray";
+// import Week from "./components/Week";
+// import { getWeeksArray } from "./service/getWeeksArray";
+import Header from './components/Header';
+import Profile from './components/Profile';
 import './App.css'
 import { useState } from "react";
+import { UserProvider } from './components/UserContext';
 
 const App = () => {
 
-const [weeksArray, setWeeksArray] = useState(getWeeksArray());
+  // const[users, setUsers] = useState(people);
+  // const[selectedUserId, setSelectedUserId] = useState(0);
 
-const onToggleSelected = (week, dayId) =>{
-  let updatedWeeks = weeksArray.map(w => {
-    if(w.week === week){
-      let updatedDays = w.days.map(day => {
-        if(day.id === dayId){
-          day.selected = !day.selected
-        }
-        return day;
-      })
-      w.days = updatedDays;
-    }
-    return w;
-  })
-  setWeeksArray(updatedWeeks)
-}
+  // const handleOnChange = (selectedId) =>{
+  //   setSelectedUserId(parseInt(selectedId));
+  // }
 
-console.log(weeksArray);
 
   return (
-    <>
-     <h3>My availability for the next 7 weeks</h3>
-     {weeksArray.map((week, index) => <Week key = {index} week = {week.week} days = {week.days} toggleSelected={onToggleSelected}/>)}
+    // <>
+    //   <Header users = {users} handleChange={handleOnChange} selectedUserId={selectedUserId}/>
 
+    //   <Profile user = {users[selectedUserId]}/>
+    // </>
+    <>
+      <Header/>
+      <Profile/>
     </>
   )
 }
