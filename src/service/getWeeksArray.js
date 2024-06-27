@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import weekOfYear from "dayjs/plugin/weekOfYear";
-dayjs.extend(weekOfYear);
+import isoWeek from "dayjs/plugin/isoWeek";
+dayjs.extend(isoWeek);
 
 const weeksArrays = {};
 
@@ -8,14 +8,15 @@ function getWeeksArray(personId) {
 
   if (!weeksArrays[personId]) {
     const weeksArray = [];
-    const currentWeek = dayjs().week();
+    const currentWeek = dayjs().isoWeek();
 
     for (let i = 0; i < 7; i++) {
       const weekStart = dayjs()
-        .week(currentWeek + i)
-        .startOf("week");
+        .isoWeek(currentWeek + i)
+        .startOf("isoWeek");
 
       const days = [];
+      const today = dayjs();
 
       for (let j = 0; j < 7; j++) {
         const day = weekStart.add(j, "day");
@@ -24,7 +25,9 @@ function getWeeksArray(personId) {
           name: dayjs(day).format("dd"),
           date: day.format("DD/MM"),
           selected: false,
+          available: today.isBefore(day, 'day') || today.isSame(day, 'day')
         });
+      
       }
 
       weeksArray.push({
