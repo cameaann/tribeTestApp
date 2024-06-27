@@ -41,6 +41,7 @@ h3{
   width: 3rem;
   padding: .5rem;
   border: 1px solid grey;
+  background-color: rgb(221, 233, 221);
 }
 
 .day-block:not(:last-child){
@@ -50,9 +51,19 @@ h3{
 .day-block:hover{
   cursor: pointer;
 }
+.disabled{
+  pointer-events: none;
+  opacity:.5;
+}
+.week-header > .day-block{
+  pointer-events: none;
+  border-color:  #EF7239;
+  background-color: white;
+  color: #EF7239;
+}
 
 .selected{
-  background-color: green;
+  background-color: #1F556B;
   color: white;
 }
 
