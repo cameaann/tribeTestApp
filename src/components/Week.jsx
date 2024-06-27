@@ -2,9 +2,6 @@
 import Day from "./Day";
 
 const Week = ({week, days, toggleSelected}) => {
-//   const [ days, setDays ] = useState(initial);
-//   console.log(days);
-
   const onToggleSelected = (dayId) => {
     toggleSelected(week, dayId);
   };
