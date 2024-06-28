@@ -225,6 +225,10 @@ tr:nth-child(even){
   color:#2D8ED1
 }
 
+.friend:hover{
+background-color: #EAE9E7;
+}
+
 
 .social{
   padding: .7rem;

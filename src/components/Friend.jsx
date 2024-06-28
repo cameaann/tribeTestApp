@@ -1,6 +1,6 @@
 const Friend = ({ user, item }) => {
   return (
-    <tr>
+    <tr className="friend">
       <td>
         <a className="user-friend" href="#">
           <i className="fa-solid fa-user avatar"></i>
