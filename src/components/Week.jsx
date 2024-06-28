@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import Day from "./Day";
 
 const Week = ({week, days, toggleSelected}) => {
