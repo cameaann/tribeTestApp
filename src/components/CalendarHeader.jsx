@@ -6,7 +6,7 @@ const CalendarHeader = () => {
   return (
     <>
       <div className="week-block week-header">
-        <span className="week-num">N#</span>
+        <span className="week-num">N</span>
         {days.map((day, i) => (
           <Day key={i} day={day} />
         ))}

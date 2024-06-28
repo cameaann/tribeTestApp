@@ -1,40 +1,38 @@
 import CalendarHeader from "./CalendarHeader";
 import Week from "./Week";
 import { useState, useEffect } from "react";
-import { getWeeksArray } from "../service/getWeeksArray";
 
-const Calendar = ({ saveCalendar, userId}) => {
+const Calendar = ({ user, saveCalendar, userId }) => {
+  const [weeksArray, setWeeksArray] = useState(user.calendar);
 
-    console.log(userId);
-    const userWeeksArray = getWeeksArray(userId);
-    const [weeksArray, setWeeksArray] = useState(userWeeksArray);
-    
-    useEffect(() => {
-      setWeeksArray(userWeeksArray)
-    }, [userId]);
-  
-    const onToggleSelected = (week, dayId) => {
-      let updatedWeeks = weeksArray.map((w) => {
-        if (w.week === week) {
-          let updatedDays = w.days.map((day) => {
-            if (day.id === dayId) {
-              day.selected = !day.selected;
-            }
-            return day;
-          });
-          w.days = updatedDays;
-        }
-        return w;
-      });
-      setWeeksArray(updatedWeeks);
-    };
+  useEffect(() => {
+    setWeeksArray(user.calendar);
+  }, [userId]);
 
-    const handleClick = ()=>{
-        saveCalendar(weeksArray)
-    }
+  const onToggleSelected = (week, dayId) => {
+    let updatedWeeks = weeksArray.map((w) => {
+      if (w.week === week) {
+        let updatedDays = w.days.map((day) => {
+          if (day.id === dayId) {
+            day.selected = !day.selected;
+          }
+          return day;
+        });
+        w.days = updatedDays;
+      }
+      return w;
+    });
+    setWeeksArray(updatedWeeks);
+  };
+
+  const handleClick = () => {
+    saveCalendar(weeksArray);
+  };
 
   return (
-    <>
+    <section>
+      <h3>My availability for the next 7 weeks</h3>
+
       <CalendarHeader />
       {weeksArray.map((week, index) => (
         <Week
@@ -44,8 +42,10 @@ const Calendar = ({ saveCalendar, userId}) => {
           toggleSelected={onToggleSelected}
         />
       ))}
-      <button className="btn save" onClick={handleClick}>Save info</button> 
-    </>
+      <button className="btn save" onClick={handleClick}>
+        Save info
+      </button>
+    </section>
   );
 };
 
