@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import FriendsTable from "./FriendsTable";
 
 const FriendsInfo = ({ users, currentUser }) => {
-  const menuList = [
-    { title: "All" },
-    { title: "This Week" },
-    { title: "Next Week" },
-    { title: "Best Week" },
+  const initialMenuList = [
+    { title: "All", active: false},
+    { title: "This Week", active: false },
+    { title: "Next Week", active: false },
+    { title: "Best Week", active:false },
   ];
 
+  const [menuList, setMenuList] = useState(initialMenuList);
   const [item, setItem] = useState(menuList[1].title);
 
   const weeks = [];
@@ -20,7 +22,12 @@ const FriendsInfo = ({ users, currentUser }) => {
     });
   });
 
-  const result = weeks.map((week) => ({ week, people: [], selectedDaysCount: 0 }));
+  const result = weeks.map((week) => ({
+    week,
+    people: [],
+    selectedDaysCount: 0,
+  }));
+
 
   users.forEach((user) => {
     user.calendar.forEach((entry) => {
@@ -40,32 +47,43 @@ const FriendsInfo = ({ users, currentUser }) => {
   });
   let bestWeek = result[0];
 
-  result.forEach(weekEntry => {
-    if(weekEntry.selectedDaysCount>bestWeek.selectedDaysCount){
-        bestWeek = weekEntry;
+  result.forEach((weekEntry) => {
+    if (weekEntry.selectedDaysCount > bestWeek.selectedDaysCount) {
+      bestWeek = weekEntry;
     }
-  })
+  });
+
+  useEffect(()=>{
+
+  },[users])
 
   const handleChange = (event) => {
     event.preventDefault();
     let week = event.target.value;
+    setMenuList(initialMenuList);
     setItem("Week " + week);
   };
 
   const handleClick = (event) => {
-    event.preventDefault();
     let i = Number(event.target.value);
+
+    const updatedMenu = menuList.map((menuItem, index) => ({
+        ...menuItem,
+        active: i === index
+    }))
+
+    setMenuList(updatedMenu);
+
 
     if (i === 0) {
       setItem(menuList[1].title);
-    }
-    else if(i===3){
-      setItem("Week "+ bestWeek.week)
-    } 
-    else {
+    } else if (i === 3) {
+      setItem("Week " + bestWeek.week);
+    } else {
       setItem(menuList[i].title);
     }
   };
+
 
   return (
     <section>
@@ -74,7 +92,7 @@ const FriendsInfo = ({ users, currentUser }) => {
         <span>Availability</span>
         {menuList.map((item, i) => (
           <button
-            className="availability-menu-item"
+            className={item.active === true? "active availability-menu-item" : "availability-menu-item"}
             key={i}
             value={i}
             onClick={handleClick}
@@ -93,37 +111,7 @@ const FriendsInfo = ({ users, currentUser }) => {
           ))}
         </select>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Friends</th>
-            <th>Availability</th>
-            <th>Action options</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user, i) => {
-            if (user.id !== currentUser.id) {
-              return (
-                <tr key={i}>
-                  <td>
-                    <i className="fa-solid fa-user avatar"></i>
-                    {user.name}
-                  </td>
-                  <td className="availability">{item}</td>
-                  <td>
-                    <i className="fa-solid fa-eye social active"></i>
-                    <i className="fa-brands fa-telegram social"></i>
-                    <i className="fa-solid fa-envelope social"></i>
-                    <i className="fa-solid fa-comment social"></i>
-                    <i className="fa-solid fa-user-xmark social"></i>
-                  </td>
-                </tr>
-              );
-            }
-          })}
-        </tbody>
-      </table>
+        <FriendsTable users={users} currentUser={currentUser} item={item}/>
     </section>
   );
 };
