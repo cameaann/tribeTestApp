@@ -1,4 +1,5 @@
 import { createContext, useState } from 'react';
+import { getWeeksArray } from '../service/getWeeksArray';
 
 const UserContext = createContext();
 
@@ -8,6 +9,8 @@ const UserProvider = ({ children }) => {
     { id:1, name: "Lena", calendar: []},
     { id:2, name: "Misha", calendar: []}
   ];
+
+  people.forEach(x => x.calendar = getWeeksArray(x.id))
 
   const [users, setUsers] = useState(people);
   const [selectedUserId, setSelectedUserId] = useState(0);
@@ -19,15 +22,12 @@ const UserProvider = ({ children }) => {
   const updateUser = (userInfo) =>{
     let updateUsers = users.map(user => {
       if(user.id === userInfo.id){
-        console.log(userInfo.calendar);
         user.calendar = userInfo.calendar
       }
       return user;
     })
     setUsers(updateUsers);
   }
-
-  console.log(users);
 
   return (
     <UserContext.Provider value={{ users, selectedUserId, handleChange, updateUser }}>
