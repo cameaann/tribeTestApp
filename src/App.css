@@ -212,6 +212,11 @@ tr:last-of-type td:last-of-type {
 tr:nth-child(even){
   background-color: #EEEEEE;
 }
+
+.td-centered{
+  text-align: center;
+}
+
 .user-friend{
   color:var(--dark-grey-color);
 }

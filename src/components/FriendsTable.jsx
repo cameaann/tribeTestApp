@@ -10,13 +10,23 @@ const FriendsTable = ({ users, currentUser, item }) => {
           <th>Action options</th>
         </tr>
       </thead>
-      <tbody>
-        {users.map((user, i) => {
-          if (user.id !== currentUser.id) {
-            return <Friend key={i} user={user} item={item} />
-          }
-        })}
-      </tbody>
+      {users.length > 1 ? (
+        <tbody>
+          {users.map((user, i) => {
+            if (user.id !== currentUser.id) {
+              return <Friend key={i} user={user} item={item} />;
+            }
+          })}
+        </tbody>
+      ) : (
+        <tbody>
+          <tr>
+            <td></td>
+            <td className="td-centered">There are no users yet</td>
+            <td></td>
+          </tr>
+        </tbody>
+      )}
     </table>
   );
 };

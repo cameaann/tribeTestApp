@@ -1,61 +1,92 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import FriendsTable from "./FriendsTable";
 
 const FriendsInfo = ({ users, currentUser }) => {
   const initialMenuList = [
-    { title: "All", active: false},
+    { title: "All", active: false },
     { title: "This Week", active: false },
     { title: "Next Week", active: false },
-    { title: "Best Week", active:false },
+    { title: "Best Week", active: false },
   ];
 
   const [menuList, setMenuList] = useState(initialMenuList);
   const [item, setItem] = useState(menuList[1].title);
 
-  const weeks = [];
+  function createWeeksArray(users) {
+    const weeks = [];
+    users.forEach((user) => {
+      user.calendar.forEach((entry) => {
+        if (!weeks.includes(entry.week)) {
+          weeks.push(entry.week);
+        }
+      });
+    });
 
-  users.forEach((user) => {
-    user.calendar.forEach((entry) => {
-      if (!weeks.includes(entry.week)) {
-        weeks.push(entry.week);
+    return weeks.map((week) => ({
+      week,
+      people: [],
+      selectedDaysCount: 0,
+    }));
+  }
+
+  function populateWeeksArray(users, weeksArray) {
+    users.forEach((user) => {
+      user.calendar.forEach((entry) => {
+        const weekEntry = weeksArray.find(
+          (weekEntry) => weekEntry.week === entry.week
+        );
+        if (weekEntry) {
+          const selectedDays = entry.days.filter(
+            (day) => day.selected === true
+          );
+
+          weekEntry.people.push({
+            id: user.id,
+            name: user.name,
+            days: selectedDays,
+          });
+          weekEntry.selectedDaysCount += selectedDays.length;
+        }
+      });
+    });
+  }
+
+  function findBestWeek(weeksArray) {
+    let bestWeek = weeksArray[0];
+    weeksArray.forEach((weekEntry) => {
+      if (weekEntry.selectedDaysCount > bestWeek.selectedDaysCount) {
+        bestWeek = weekEntry;
       }
     });
-  });
+    return bestWeek;
+  }
 
-  const result = weeks.map((week) => ({
-    week,
-    people: [],
-    selectedDaysCount: 0,
-  }));
-
-
-  users.forEach((user) => {
-    user.calendar.forEach((entry) => {
-      const weekEntry = result.find(
-        (weekEntry) => weekEntry.week === entry.week
-      );
-      if (weekEntry) {
-        const selectedDays = entry.days.filter((day) => day.selected === true);
-        weekEntry.people.push({
-          id: user.id,
-          name: user.name,
-          days: selectedDays,
-        });
-        weekEntry.selectedDaysCount += selectedDays.length;
-      }
+  function groupPeopleById(users) {
+    return users.map(user => {
+      const userDays = [];
+      user.calendar.forEach(week => {
+        const selectedDays = week.days.filter(day => day.selected === true);
+        userDays.push(...selectedDays);
+      });
+      return {
+        id: user.id,
+        name: user.name,
+        days: userDays,
+      };
     });
-  });
-  let bestWeek = result[0];
+  }
 
-  result.forEach((weekEntry) => {
-    if (weekEntry.selectedDaysCount > bestWeek.selectedDaysCount) {
-      bestWeek = weekEntry;
-    }
-  });
+  function processData(users) {
+    const weeksArray = createWeeksArray(users);
+    populateWeeksArray(users, weeksArray);
+    const bestWeek = findBestWeek(weeksArray);
+    const people = groupPeopleById(users);
 
-  useEffect(()=>{
+    return { weeksArray, bestWeek, people };
+  }
 
-  },[users])
+  const { weeksArray, bestWeek, people } = processData(users);
+
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -68,12 +99,11 @@ const FriendsInfo = ({ users, currentUser }) => {
     let i = Number(event.target.value);
 
     const updatedMenu = menuList.map((menuItem, index) => ({
-        ...menuItem,
-        active: i === index
-    }))
+      ...menuItem,
+      active: i === index,
+    }));
 
     setMenuList(updatedMenu);
-
 
     if (i === 0) {
       setItem(menuList[1].title);
@@ -84,7 +114,6 @@ const FriendsInfo = ({ users, currentUser }) => {
     }
   };
 
-
   return (
     <section>
       <h3>{currentUser.name}&apos;s best friends</h3>
@@ -92,7 +121,11 @@ const FriendsInfo = ({ users, currentUser }) => {
         <span>Availability</span>
         {menuList.map((item, i) => (
           <button
-            className={item.active === true? "active availability-menu-item" : "availability-menu-item"}
+            className={
+              item.active === true
+                ? "active availability-menu-item"
+                : "availability-menu-item"
+            }
             key={i}
             value={i}
             onClick={handleClick}
@@ -104,14 +137,14 @@ const FriendsInfo = ({ users, currentUser }) => {
           <option value="" disabled>
             Select week
           </option>
-          {result.map((entry, index) => (
+          {weeksArray.map((entry, index) => (
             <option key={index} value={entry.week}>
               week {entry.week}
             </option>
           ))}
         </select>
       </div>
-        <FriendsTable users={users} currentUser={currentUser} item={item}/>
+      <FriendsTable users={people} currentUser={currentUser} item={item} />
     </section>
   );
 };
