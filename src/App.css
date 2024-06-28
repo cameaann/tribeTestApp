@@ -5,6 +5,7 @@
   --enabled-icon-color: #2D8ED1;
   --enabled-icon-background-color: #E0E1E2;
   --primary-accent-color:#E53936;
+  --dark-grey-color:#213547;
 }
 
 
@@ -13,6 +14,7 @@ html {
 }
 body {
   font-size: 1.6rem;
+  color: var(--dark-grey-color);
 }
 
 .main{
@@ -148,8 +150,14 @@ section {
 }
 
 .availability-menu-item {
+  color: var(--dark-grey-color);
   font-weight: bold;
   background-color: transparent;
+}
+
+.availability-menu-item.active{
+  background-color: blue;
+  color:#FFFFFF;
 }
 
 .availability-menu-item:hover {
@@ -203,6 +211,13 @@ tr:last-of-type td:last-of-type {
 }
 tr:nth-child(even){
   background-color: #EEEEEE;
+}
+.user-friend{
+  color:var(--dark-grey-color);
+}
+.user-friend:hover{
+  cursor: pointer;
+  color:#2D8ED1
 }
 
 
